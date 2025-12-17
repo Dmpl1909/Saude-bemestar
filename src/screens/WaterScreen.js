@@ -119,7 +119,7 @@ export default function WaterScreen({ navigation }) {
           </View>
           <TouchableOpacity onPress={() => setShowGoalInput(!showGoalInput)}>
             <Text style={styles.progressText}>
-              Meta: {waterCount}/{goal} copos 📝
+              Meta: {waterCount}/{goal} copos 
             </Text>
           </TouchableOpacity>
         </View>
@@ -162,7 +162,7 @@ export default function WaterScreen({ navigation }) {
         </View>
 
         <Text style={styles.tipText}>
-          💡 Dica: Beba pelo menos 8 copos de água por dia para manter-se hidratado!
+          Dica: Beba pelo menos 8 copos de água por dia para manter-se hidratado!
         </Text>
         </ScrollView>
       </TouchableWithoutFeedback>

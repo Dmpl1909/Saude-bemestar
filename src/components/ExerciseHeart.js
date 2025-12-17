@@ -120,12 +120,12 @@ export default function ExerciseHeart({ width = 200, height = 200, progress = 0 
     <View style={{ width, height }}>
       <Svg width={width} height={height}>
         <Defs>
-          {/* Gradiente vermelho intenso e vibrante */}
+          {/* Gradiente vermelho vibrante */}
           <SvgGradient id="heartGrad" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#FF1744" stopOpacity="1" />
-            <Stop offset="0.3" stopColor="#FF0000" stopOpacity="1" />
-            <Stop offset="0.7" stopColor="#DC143C" stopOpacity="1" />
-            <Stop offset="1" stopColor="#B71C1C" stopOpacity="1" />
+            <Stop offset="0" stopColor="#FF6B9D" stopOpacity="1" />
+            <Stop offset="0.3" stopColor="#FF5582" stopOpacity="1" />
+            <Stop offset="0.7" stopColor="#F44336" stopOpacity="1" />
+            <Stop offset="1" stopColor="#D32F2F" stopOpacity="1" />
           </SvgGradient>
 
           {/* Gradiente para brilho */}
@@ -169,7 +169,7 @@ export default function ExerciseHeart({ width = 200, height = 200, progress = 0 
             <Path
               d={heartPath}
               fill="#B71C1C"
-              opacity={0.3}
+              opacity={0.8}
               transform={`translate(2, 3)`}
             />
 
