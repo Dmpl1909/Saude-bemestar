@@ -3,14 +3,15 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   FlatList,
   TextInput,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { getData, saveData, getTodayDate } from '../utils/storage';
+import ExerciseHeart from '../components/ExerciseHeart';
  
 
 export default function ExerciseScreen({ navigation }) {
@@ -107,15 +108,18 @@ export default function ExerciseScreen({ navigation }) {
       </View>
 
       <View style={styles.content}>
-        <View style={styles.summaryCard}>
-          <Ionicons name="fitness" size={50} color="#E74C3C" />
-          <View style={styles.summaryInfo}>
-            <Text style={styles.summaryNumber}>{exercises.length}</Text>
-            <Text style={styles.summaryLabel}>Exercícios</Text>
+        <View style={styles.heartContainer}>
+          <ExerciseHeart width={200} height={200} progress={Math.min(exercises.length / 5, 1)} />
+        </View>
+
+        <View style={styles.statsRow}>
+          <View style={styles.statBox}>
+            <Text style={styles.statNumber}>{exercises.length}</Text>
+            <Text style={styles.statLabel}>Exercícios</Text>
           </View>
-          <View style={styles.summaryInfo}>
-            <Text style={styles.summaryNumber}>{getTotalDuration()}</Text>
-            <Text style={styles.summaryLabel}>Minutos</Text>
+          <View style={styles.statBox}>
+            <Text style={styles.statNumber}>{getTotalDuration()}</Text>
+            <Text style={styles.statLabel}>Minutos</Text>
           </View>
         </View>
 
@@ -189,6 +193,40 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 15,
+  },
+  heartContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+    paddingHorizontal: 20,
+  },
+  statBox: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+    minWidth: 120,
+  },
+  statNumber: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#F44336',
+  },
+  statLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 5,
   },
   summaryCard: {
     backgroundColor: '#fff',
