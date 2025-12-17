@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getData, saveData, getTodayDate } from '../utils/storage';
+import WaterGlass from '../components/WaterGlass';
+ 
 
 export default function WaterScreen({ navigation }) {
   const [waterCount, setWaterCount] = useState(0);
@@ -72,18 +74,16 @@ export default function WaterScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={28} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Consumo de Água</Text>
+        <Ionicons name="water" size={32} color="#2196F3" />
+        <Text style={styles.headerTitle}>Água</Text>
         <TouchableOpacity onPress={resetWater}>
-          <Ionicons name="refresh" size={28} color="#4A90E2" />
+          <Ionicons name="refresh" size={28} color="#2196F3" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.content}>
-        <View style={styles.iconContainer}>
-          <Ionicons name="water" size={100} color="#4A90E2" />
+        <View style={styles.glassContainer}>
+          <WaterGlass width={200} height={280} progress={waterCount / goal} />
         </View>
 
         <Text style={styles.countText}>{waterCount}</Text>
@@ -146,9 +146,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
-  iconContainer: {
-    marginTop: 30,
-    marginBottom: 20,
+  glassContainer: {
+    marginTop: 20,
+    marginBottom: 15,
   },
   countText: {
     fontSize: 80,

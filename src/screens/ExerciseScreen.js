@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getData, saveData, getTodayDate } from '../utils/storage';
+ 
 
 export default function ExerciseScreen({ navigation }) {
   const [exercises, setExercises] = useState([]);
@@ -101,11 +102,8 @@ export default function ExerciseScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={28} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Exercícios Físicos</Text>
-        <View style={{ width: 28 }} />
+        <Ionicons name="fitness" size={32} color="#F44336" />
+        <Text style={styles.headerTitle}>Exercícios</Text>
       </View>
 
       <View style={styles.content}>
@@ -219,6 +217,7 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 5,
   },
+  
   inputCard: {
     backgroundColor: '#fff',
     borderRadius: 15,

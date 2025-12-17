@@ -95,12 +95,10 @@ export default function SleepScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={28} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Horas de Sono</Text>
+        <Ionicons name="moon" size={32} color="#9C27B0" />
+        <Text style={styles.headerTitle}>Sono</Text>
         <TouchableOpacity onPress={resetSleep}>
-          <Ionicons name="refresh" size={28} color="#9B59B6" />
+          <Ionicons name="refresh" size={28} color="#9C27B0" />
         </TouchableOpacity>
       </View>
 
