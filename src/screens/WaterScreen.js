@@ -3,16 +3,24 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
+  TextInput,
   Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { getData, saveData, getTodayDate } from '../utils/storage';
+import WaterGlass from '../components/WaterGlass';
+ 
 
 export default function WaterScreen({ navigation }) {
   const [waterCount, setWaterCount] = useState(0);
-  const goal = 8; // Meta de 8 copos por dia
+  const [goal, setGoal] = useState(8);
+  const [showGoalInput, setShowGoalInput] = useState(false);
+  const [goalInputValue, setGoalInputValue] = useState('8');
 
   useEffect(() => {
     loadData();
@@ -22,13 +30,30 @@ export default function WaterScreen({ navigation }) {
     const today = getTodayDate();
     const data = await getData(today);
     setWaterCount(data.water);
+    if (data.waterGoal) {
+      setGoal(data.waterGoal);
+      setGoalInputValue(data.waterGoal.toString());
+    }
   };
 
-  const saveWaterData = async (newCount) => {
+  const saveWaterData = async (newCount, newGoal = goal) => {
     const today = getTodayDate();
     const data = await getData(today);
     data.water = newCount;
+    data.waterGoal = newGoal;
     await saveData(today, data);
+  };
+
+  const updateGoal = () => {
+    const newGoal = parseInt(goalInputValue);
+    if (newGoal && newGoal > 0 && newGoal <= 20) {
+      setGoal(newGoal);
+      saveWaterData(waterCount, newGoal);
+      setShowGoalInput(false);
+      Alert.alert('Sucesso', `Meta atualizada para ${newGoal} copos!`);
+    } else {
+      Alert.alert('Erro', 'Digite um número válido entre 1 e 20');
+    }
   };
 
   const addWater = () => {
@@ -72,18 +97,17 @@ export default function WaterScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={28} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Consumo de Água</Text>
+        <Ionicons name="water" size={32} color="#2196F3" />
+        <Text style={styles.headerTitle}>Água</Text>
         <TouchableOpacity onPress={resetWater}>
-          <Ionicons name="refresh" size={28} color="#4A90E2" />
+          <Ionicons name="refresh" size={28} color="#2196F3" />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.content}>
-        <View style={styles.iconContainer}>
-          <Ionicons name="water" size={100} color="#4A90E2" />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.glassContainer}>
+          <WaterGlass width={200} height={280} progress={waterCount / goal} />
         </View>
 
         <Text style={styles.countText}>{waterCount}</Text>
@@ -93,10 +117,36 @@ export default function WaterScreen({ navigation }) {
           <View style={styles.progressBar}>
             <View style={[styles.progressFill, { width: `${progress}%` }]} />
           </View>
-          <Text style={styles.progressText}>
-            Meta: {waterCount}/{goal} copos
-          </Text>
+          <TouchableOpacity onPress={() => setShowGoalInput(!showGoalInput)}>
+            <Text style={styles.progressText}>
+              Meta: {waterCount}/{goal} copos 
+            </Text>
+          </TouchableOpacity>
         </View>
+
+        {showGoalInput && (
+          <View style={styles.goalInputContainer}>
+            <Text style={styles.goalInputLabel}>Nova meta (copos):</Text>
+            <View style={styles.goalInputRow}>
+              <TextInput
+                style={styles.goalInput}
+                value={goalInputValue}
+                onChangeText={setGoalInputValue}
+                keyboardType="number-pad"
+                placeholder="8"
+              />
+              <TouchableOpacity style={styles.goalUpdateButton} onPress={updateGoal}>
+                <Text style={styles.goalUpdateButtonText}>Salvar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={styles.goalCancelButton} 
+                onPress={() => setShowGoalInput(false)}
+              >
+                <Ionicons name="close" size={24} color="#666" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -112,9 +162,10 @@ export default function WaterScreen({ navigation }) {
         </View>
 
         <Text style={styles.tipText}>
-          💡 Dica: Beba pelo menos 8 copos de água por dia para manter-se hidratado!
+          Dica: Beba pelo menos 8 copos de água por dia para manter-se hidratado!
         </Text>
-      </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }
@@ -142,13 +193,13 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   content: {
-    flex: 1,
     alignItems: 'center',
     padding: 20,
+    paddingBottom: 40,
   },
-  iconContainer: {
-    marginTop: 30,
-    marginBottom: 20,
+  glassContainer: {
+    marginTop: 20,
+    marginBottom: 15,
   },
   countText: {
     fontSize: 80,
@@ -178,7 +229,54 @@ const styles = StyleSheet.create({
   progressText: {
     textAlign: 'center',
     fontSize: 16,
+    color: '#2196F3',
+    fontWeight: '600',
+  },
+  goalInputContainer: {
+    backgroundColor: '#FFFFFF',
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  goalInputLabel: {
+    fontSize: 14,
     color: '#666',
+    marginBottom: 10,
+    fontWeight: '600',
+  },
+  goalInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  goalInput: {
+    flex: 1,
+    height: 45,
+    borderWidth: 2,
+    borderColor: '#2196F3',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    backgroundColor: '#F5F9FF',
+  },
+  goalUpdateButton: {
+    backgroundColor: '#2196F3',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  goalUpdateButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  goalCancelButton: {
+    padding: 10,
   },
   buttonContainer: {
     flexDirection: 'row',

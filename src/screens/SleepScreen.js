@@ -3,18 +3,24 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   TextInput,
   Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { getData, saveData, getTodayDate } from '../utils/storage';
+import MoonPhase from '../components/MoonPhase';
 
 export default function SleepScreen({ navigation }) {
   const [sleepHours, setSleepHours] = useState(0);
   const [inputValue, setInputValue] = useState('');
-  const goal = 8; // Meta de 8 horas por noite
+  const [goal, setGoal] = useState(8);
+  const [showGoalInput, setShowGoalInput] = useState(false);
+  const [goalInputValue, setGoalInputValue] = useState('8');
 
   useEffect(() => {
     loadData();
@@ -25,13 +31,30 @@ export default function SleepScreen({ navigation }) {
     const data = await getData(today);
     setSleepHours(data.sleep);
     setInputValue(data.sleep.toString());
+    if (data.sleepGoal) {
+      setGoal(data.sleepGoal);
+      setGoalInputValue(data.sleepGoal.toString());
+    }
   };
 
-  const saveSleepData = async (hours) => {
+  const saveSleepData = async (hours, newGoal = goal) => {
     const today = getTodayDate();
     const data = await getData(today);
     data.sleep = hours;
+    data.sleepGoal = newGoal;
     await saveData(today, data);
+  };
+
+  const updateGoal = () => {
+    const newGoal = parseInt(goalInputValue);
+    if (newGoal && newGoal > 0 && newGoal <= 16) {
+      setGoal(newGoal);
+      saveSleepData(sleepHours, newGoal);
+      setShowGoalInput(false);
+      Alert.alert('Sucesso', `Meta atualizada para ${newGoal} horas!`);
+    } else {
+      Alert.alert('Erro', 'Digite um número válido entre 1 e 16');
+    }
   };
 
   const updateSleep = () => {
@@ -95,18 +118,17 @@ export default function SleepScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={28} color="#333" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Horas de Sono</Text>
+        <Ionicons name="moon" size={32} color="#9C27B0" />
+        <Text style={styles.headerTitle}>Sono</Text>
         <TouchableOpacity onPress={resetSleep}>
-          <Ionicons name="refresh" size={28} color="#9B59B6" />
+          <Ionicons name="refresh" size={28} color="#9C27B0" />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.content}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.iconContainer}>
-          <Ionicons name="moon" size={100} color="#9B59B6" />
+          <MoonPhase width={200} height={200} progress={sleepHours / goal} />
         </View>
 
         <Text style={styles.countText}>{sleepHours.toFixed(1)}</Text>
@@ -120,10 +142,36 @@ export default function SleepScreen({ navigation }) {
           <View style={styles.progressBar}>
             <View style={[styles.progressFill, { width: `${progress}%` }]} />
           </View>
-          <Text style={styles.progressText}>
-            Meta: {sleepHours.toFixed(1)}/{goal} horas
-          </Text>
+          <TouchableOpacity onPress={() => setShowGoalInput(!showGoalInput)}>
+            <Text style={styles.progressText}>
+              Meta: {sleepHours.toFixed(1)}/{goal} horas 📝
+            </Text>
+          </TouchableOpacity>
         </View>
+
+        {showGoalInput && (
+          <View style={styles.goalInputContainer}>
+            <Text style={styles.goalInputLabel}>Nova meta (horas):</Text>
+            <View style={styles.goalInputRow}>
+              <TextInput
+                style={styles.goalInput}
+                value={goalInputValue}
+                onChangeText={setGoalInputValue}
+                keyboardType="number-pad"
+                placeholder="8"
+              />
+              <TouchableOpacity style={styles.goalUpdateButton} onPress={updateGoal}>
+                <Text style={styles.goalUpdateButtonText}>Salvar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={styles.goalCancelButton} 
+                onPress={() => setShowGoalInput(false)}
+              >
+                <Ionicons name="close" size={24} color="#666" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
 
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Digite as horas:</Text>
@@ -157,7 +205,8 @@ export default function SleepScreen({ navigation }) {
         <Text style={styles.tipText}>
           💡 Dica: Durma de 7 a 9 horas por noite para uma boa recuperação!
         </Text>
-      </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }
@@ -185,18 +234,20 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   content: {
-    flex: 1,
     alignItems: 'center',
     padding: 20,
+    paddingBottom: 40,
   },
   iconContainer: {
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: 10,
+    marginBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   countText: {
-    fontSize: 80,
+    fontSize: 72,
     fontWeight: 'bold',
-    color: '#9B59B6',
+    color: '#9C27B0',
   },
   labelText: {
     fontSize: 20,
@@ -232,7 +283,54 @@ const styles = StyleSheet.create({
   progressText: {
     textAlign: 'center',
     fontSize: 16,
+    color: '#9C27B0',
+    fontWeight: '600',
+  },
+  goalInputContainer: {
+    backgroundColor: '#FFFFFF',
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  goalInputLabel: {
+    fontSize: 14,
     color: '#666',
+    marginBottom: 10,
+    fontWeight: '600',
+  },
+  goalInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  goalInput: {
+    flex: 1,
+    height: 45,
+    borderWidth: 2,
+    borderColor: '#9C27B0',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    backgroundColor: '#F9F5FF',
+  },
+  goalUpdateButton: {
+    backgroundColor: '#9C27B0',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  goalUpdateButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  goalCancelButton: {
+    padding: 10,
   },
   inputContainer: {
     width: '100%',
