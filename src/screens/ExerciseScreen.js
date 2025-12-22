@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  FlatList,
   TextInput,
   Alert,
   Modal,
@@ -45,6 +44,11 @@ export default function ExerciseScreen({ navigation }) {
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', loadData);
+    return unsubscribe;
+  }, [navigation]);
 
   const loadData = async () => {
     const today = getTodayDate();
@@ -107,34 +111,39 @@ export default function ExerciseScreen({ navigation }) {
     ]);
   };
 
+  const resetExercises = () => {
+    Alert.alert(
+      'Reiniciar Exercícios',
+      'Desejas reiniciar todos os exercícios para hoje?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Reiniciar',
+          style: 'destructive',
+          onPress: () => {
+            setExercises([]);
+            saveExercises([]);
+          },
+        },
+      ]
+    );
+  };
+
   const getTotalDuration = () => {
     return exercises.reduce((total, ex) => total + ex.duration, 0);
   };
-
-  const renderExercise = ({ item }) => (
-    <View style={styles.exerciseItem}>
-      <View style={styles.exerciseIcon}>
-        <Ionicons name="barbell" size={30} color="#E74C3C" />
-      </View>
-      <View style={styles.exerciseInfo}>
-        <Text style={styles.exerciseName}>{item.name}</Text>
-        <Text style={styles.exerciseDetails}>
-          {item.duration} min • {item.time}
-        </Text>
-      </View>
-      <TouchableOpacity onPress={() => removeExercise(item.id)}>
-        <Ionicons name="trash-outline" size={24} color="#E74C3C" />
-      </TouchableOpacity>
-    </View>
-  );
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Ionicons name="fitness" size={32} color="#F44336" />
         <Text style={styles.headerTitle}>Exercícios</Text>
+        <TouchableOpacity onPress={resetExercises}>
+          <Ionicons name="refresh" size={28} color="#F44336" />
+        </TouchableOpacity>
       </View>
 
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
       <View style={styles.content}>
         <View style={styles.heartContainer}>
           <ExerciseHeart width={200} height={200} progress={Math.min(exercises.length / 5, 1)} />
@@ -230,15 +239,26 @@ export default function ExerciseScreen({ navigation }) {
               <Text style={styles.emptyText}>Nenhum exercício registado</Text>
             </View>
           ) : (
-            <FlatList
-              data={exercises}
-              renderItem={renderExercise}
-              keyExtractor={(item) => item.id}
-              showsVerticalScrollIndicator={false}
-            />
+            exercises.map((item) => (
+              <View key={item.id} style={styles.exerciseItem}>
+                <View style={styles.exerciseIcon}>
+                  <Ionicons name="barbell" size={30} color="#E74C3C" />
+                </View>
+                <View style={styles.exerciseInfo}>
+                  <Text style={styles.exerciseName}>{item.name}</Text>
+                  <Text style={styles.exerciseDetails}>
+                    {item.duration} min • {item.time}
+                  </Text>
+                </View>
+                <TouchableOpacity onPress={() => removeExercise(item.id)}>
+                  <Ionicons name="trash-outline" size={24} color="#E74C3C" />
+                </TouchableOpacity>
+              </View>
+            ))
           )}
         </View>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
