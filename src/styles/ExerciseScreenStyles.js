@@ -187,6 +187,64 @@ const styles = StyleSheet.create({
     color: '#F44336',
     fontWeight: '600',
   },
+  progressContainer: {
+    marginBottom: 15,
+  },
+  progressBar: {
+    height: 8,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginBottom: 8,
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: '#F44336',
+    borderRadius: 10,
+  },
+  progressText: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+  },
+  goalInputContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  goalInputLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+  },
+  goalInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  goalInput: {
+    flex: 1,
+    backgroundColor: '#F5F6FA',
+    borderRadius: 10,
+    padding: 12,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    marginRight: 10,
+  },
+  goalUpdateButton: {
+    backgroundColor: '#F44336',
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    marginRight: 10,
+  },
+  goalUpdateButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  goalCancelButton: {
+    padding: 12,
+  },
   addButton: {
     backgroundColor: '#E74C3C',
     borderRadius: 10,

@@ -40,6 +40,9 @@ export default function ExerciseScreen({ navigation }) {
   const [exerciseName, setExerciseName] = useState('');
   const [duration, setDuration] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [goal, setGoal] = useState(30);
+  const [showGoalInput, setShowGoalInput] = useState(false);
+  const [goalInputValue, setGoalInputValue] = useState('30');
 
   useEffect(() => {
     loadData();
@@ -54,18 +57,35 @@ export default function ExerciseScreen({ navigation }) {
     const today = getTodayDate();
     const data = await getData(today);
     setExercises(data.exercises || []);
+    if (data.exerciseGoal) {
+      setGoal(data.exerciseGoal);
+      setGoalInputValue(data.exerciseGoal.toString());
+    }
   };
 
-  const saveExercises = async (newExercises) => {
+  const saveExercises = async (newExercises, newGoal = goal) => {
     const today = getTodayDate();
     const data = await getData(today);
     data.exercises = newExercises;
+    data.exerciseGoal = newGoal;
     await saveData(today, data);
   };
 
   const selectExercise = (exercise) => {
     setExerciseName(exercise);
     setShowDropdown(false);
+  };
+
+  const updateGoal = () => {
+    const newGoal = parseInt(goalInputValue);
+    if (newGoal && newGoal > 0 && newGoal <= 300) {
+      setGoal(newGoal);
+      saveExercises(exercises, newGoal);
+      setShowGoalInput(false);
+      Alert.alert('Sucesso', `Meta actualizada para ${newGoal} minutos!`);
+    } else {
+      Alert.alert('Erro', 'Introduza um número válido entre 1 e 300');
+    }
   };
 
   const addExercise = () => {
@@ -91,9 +111,13 @@ export default function ExerciseScreen({ navigation }) {
     setExercises(newExercises);
     saveExercises(newExercises);
 
+    const totalMinutes = newExercises.reduce((total, ex) => total + ex.duration, 0);
+    if (totalMinutes >= goal) {
+      Alert.alert('Parabéns!', 'Atingiste a tua meta de exercício! 💪');
+    }
+
     setExerciseName('');
     setDuration('');
-    Alert.alert('Sucesso!', 'Exercício adicionado com sucesso! 💪');
   };
 
   const removeExercise = (id) => {
@@ -146,7 +170,7 @@ export default function ExerciseScreen({ navigation }) {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
       <View style={styles.content}>
         <View style={styles.heartContainer}>
-          <ExerciseHeart width={200} height={200} progress={Math.min(exercises.length / 5, 1)} />
+          <ExerciseHeart width={200} height={200} progress={Math.min(getTotalDuration() / goal, 1)} />
         </View>
 
         <View style={styles.statsRow}>
@@ -224,6 +248,41 @@ export default function ExerciseScreen({ navigation }) {
             onChangeText={setDuration}
             keyboardType="number-pad"
           />
+
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBar}>
+              <View style={[styles.progressFill, { width: `${Math.min((getTotalDuration() / goal) * 100, 100)}%` }]} />
+            </View>
+            <TouchableOpacity onPress={() => setShowGoalInput(!showGoalInput)}>
+              <Text style={styles.progressText}>
+                Meta: {getTotalDuration()}/{goal} minutos 📝
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {showGoalInput && (
+            <View style={styles.goalInputContainer}>
+              <Text style={styles.goalInputLabel}>Nova meta (minutos):</Text>
+              <View style={styles.goalInputRow}>
+                <TextInput
+                  style={styles.goalInput}
+                  value={goalInputValue}
+                  onChangeText={setGoalInputValue}
+                  keyboardType="number-pad"
+                  placeholder="30"
+                />
+                <TouchableOpacity style={styles.goalUpdateButton} onPress={updateGoal}>
+                  <Text style={styles.goalUpdateButtonText}>Salvar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={styles.goalCancelButton} 
+                  onPress={() => setShowGoalInput(false)}
+                >
+                  <Ionicons name="close" size={24} color="#666" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
 
           <TouchableOpacity style={styles.addButton} onPress={addExercise}>
             <Ionicons name="add-circle" size={24} color="#fff" />
