@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import HabitCard from '../components/HabitCard';
 import { getData, getTodayDate } from '../utils/storage';
 import styles from '../styles/HomeScreenStyles';
 
