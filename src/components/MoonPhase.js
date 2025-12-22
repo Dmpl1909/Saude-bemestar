@@ -1,17 +1,88 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Animated, Easing } from 'react-native';
 import Svg, { Defs, LinearGradient as SvgGradient, Stop, Circle, Path, Ellipse, Rect } from 'react-native-svg';
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 export default function MoonPhase({ width = 200, height = 200, progress = 0 }) {
   const centerX = width / 2;
   const centerY = height / 2;
   const moonRadius = 60;
+  
+  const glow = useRef(new Animated.Value(moonRadius + 12)).current;
+  const twinkle1 = useRef(new Animated.Value(0)).current;
+  const twinkle2 = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Glow animation for moon halo (animate radius)
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(glow, {
+          toValue: moonRadius + 20,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: false,
+        }),
+        Animated.timing(glow, {
+          toValue: moonRadius + 12,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: false,
+        }),
+      ])
+    ).start();
+
+    // Twinkling stars
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(twinkle1, {
+          toValue: 1,
+          duration: 1500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(twinkle1, {
+          toValue: 0,
+          duration: 1500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.delay(800),
+        Animated.timing(twinkle2, {
+          toValue: 1,
+          duration: 1800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(twinkle2, {
+          toValue: 0,
+          duration: 1800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  const twinkleOpacity1 = twinkle1.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.3, 1],
+  });
+
+  const twinkleOpacity2 = twinkle2.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.2, 0.9],
+  });
 
   return (
     <View style={{ width, height, alignItems: 'center', justifyContent: 'center' }}>
       <Svg width={width} height={height}>
         <Defs>
-          {/* Gradiente da lua realista com cores cremosas */}
           <SvgGradient id="moonGrad" x1="0.3" y1="0.3" x2="0.7" y2="0.7">
             <Stop offset="0" stopColor="#FFFEF5" stopOpacity="1" />
             <Stop offset="0.2" stopColor="#FFFFF0" stopOpacity="1" />
@@ -22,7 +93,6 @@ export default function MoonPhase({ width = 200, height = 200, progress = 0 }) {
             <Stop offset="1" stopColor="#FFD89B" stopOpacity="1" />
           </SvgGradient>
 
-          {/* Brilho suave envolvendo a lua */}
           <SvgGradient id="moonGlow" x1="0.5" y1="0" x2="0.5" y2="1">
             <Stop offset="0" stopColor="#FFFFFF" stopOpacity="0.5" />
             <Stop offset="0.3" stopColor="#FFFACD" stopOpacity="0.3" />
@@ -30,13 +100,11 @@ export default function MoonPhase({ width = 200, height = 200, progress = 0 }) {
             <Stop offset="1" stopColor="#FFFACD" stopOpacity="0" />
           </SvgGradient>
 
-          {/* Gradiente realista das crateras */}
           <SvgGradient id="craterGrad" x1="0" y1="0" x2="1" y2="1">
             <Stop offset="0" stopColor="#E8D4A8" stopOpacity="0.7" />
             <Stop offset="1" stopColor="#D4B896" stopOpacity="0.5" />
           </SvgGradient>
 
-          {/* Céu noturno suave */}
           <SvgGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
             <Stop offset="0" stopColor="#0B1F3F" stopOpacity="0.3" />
             <Stop offset="0.5" stopColor="#1A2B4A" stopOpacity="0.2" />
@@ -44,28 +112,25 @@ export default function MoonPhase({ width = 200, height = 200, progress = 0 }) {
           </SvgGradient>
         </Defs>
 
-        {/* Fundo do céu */}
         <Rect width={width} height={height} fill="url(#skyGrad)" />
 
-        {/* Estrelas estáticas e suaves */}
-        <Circle cx={centerX - 70} cy={centerY - 60} r={1.2} fill="#FFFFFF" opacity="0.6" />
-        <Circle cx={centerX + 60} cy={centerY - 50} r={1} fill="#FFFFFF" opacity="0.5" />
-        <Circle cx={centerX - 50} cy={centerY + 70} r={1.5} fill="#FFFFFF" opacity="0.55" />
-        <Circle cx={centerX + 75} cy={centerY + 60} r={1.1} fill="#FFFFFF" opacity="0.4" />
+        <AnimatedCircle cx={centerX - 70} cy={centerY - 60} r={1.2} fill="#FFFFFF" opacity={twinkleOpacity1} />
+        <AnimatedCircle cx={centerX + 60} cy={centerY - 50} r={1} fill="#FFFFFF" opacity={twinkleOpacity2} />
+        <AnimatedCircle cx={centerX - 50} cy={centerY + 70} r={1.5} fill="#FFFFFF" opacity={twinkleOpacity2} />
+        <AnimatedCircle cx={centerX + 75} cy={centerY + 60} r={1.1} fill="#FFFFFF" opacity={twinkleOpacity1} />
         <Circle cx={centerX - 80} cy={centerY + 20} r={0.9} fill="#FFFFFF" opacity="0.5" />
         <Circle cx={centerX + 50} cy={centerY + 30} r={1.2} fill="#FFFFFF" opacity="0.45" />
-        <Circle cx={centerX - 60} cy={centerY - 30} r={0.8} fill="#FFFFFF" opacity="0.35" />
-        <Circle cx={centerX + 40} cy={centerY - 60} r={1} fill="#FFFFFF" opacity="0.5" />
+        <AnimatedCircle cx={centerX - 60} cy={centerY - 30} r={0.8} fill="#FFFFFF" opacity={twinkleOpacity2} />
+        <AnimatedCircle cx={centerX + 40} cy={centerY - 60} r={1} fill="#FFFFFF" opacity={twinkleOpacity1} />
 
-        {/* Brilho envolvendo a lua */}
-        <Circle
+        <AnimatedCircle
           cx={centerX}
           cy={centerY}
-          r={moonRadius + 12}
+          r={glow}
           fill="url(#moonGlow)"
+          opacity={0.7}
         />
 
-        {/* Lua base - estática e realista */}
         <Circle
           cx={centerX}
           cy={centerY}
@@ -73,9 +138,6 @@ export default function MoonPhase({ width = 200, height = 200, progress = 0 }) {
           fill="url(#moonGrad)"
         />
 
-        {/* Crateras realistas - sem animação */}
-        
-        {/* Cratera grande - Tycho (lado direito) */}
         <Circle
           cx={centerX + 25}
           cy={centerY - 15}
@@ -98,7 +160,6 @@ export default function MoonPhase({ width = 200, height = 200, progress = 0 }) {
           opacity="0.3"
         />
 
-        {/* Cratera média - lado esquerdo superior */}
         <Circle
           cx={centerX - 30}
           cy={centerY - 20}
@@ -114,7 +175,6 @@ export default function MoonPhase({ width = 200, height = 200, progress = 0 }) {
           opacity="0.35"
         />
 
-        {/* Cratera grande - lado inferior */}
         <Circle
           cx={centerX + 15}
           cy={centerY + 30}
@@ -130,7 +190,6 @@ export default function MoonPhase({ width = 200, height = 200, progress = 0 }) {
           opacity="0.4"
         />
 
-        {/* Cratera pequena - esquerda inferior */}
         <Circle
           cx={centerX - 35}
           cy={centerY + 20}
@@ -146,7 +205,6 @@ export default function MoonPhase({ width = 200, height = 200, progress = 0 }) {
           opacity="0.3"
         />
 
-        {/* Crateras extras pequenas para realismo */}
         <Circle cx={centerX - 10} cy={centerY - 25} r={4} fill="#E8D4A8" opacity="0.35" />
         <Circle cx={centerX + 8} cy={centerY - 30} r={3} fill="#D4B896" opacity="0.3" />
         <Circle cx={centerX - 20} cy={centerY + 8} r={5} fill="#E8D4A8" opacity="0.4" />
@@ -154,7 +212,6 @@ export default function MoonPhase({ width = 200, height = 200, progress = 0 }) {
         <Circle cx={centerX + 5} cy={centerY + 40} r={3.5} fill="#E8D4A8" opacity="0.3" />
         <Circle cx={centerX - 45} cy={centerY - 5} r={6} fill="url(#craterGrad)" opacity="0.45" />
 
-        {/* Linhas suaves de relevo */}
         <Path
           d={`M ${centerX - 15} ${centerY - 35} Q ${centerX} ${centerY - 40} ${centerX + 20} ${centerY - 30}`}
           stroke="#FFE8B6"
@@ -170,7 +227,6 @@ export default function MoonPhase({ width = 200, height = 200, progress = 0 }) {
           opacity="0.25"
         />
 
-        {/* Borda sutil da lua */}
         <Circle
           cx={centerX}
           cy={centerY}
@@ -181,7 +237,6 @@ export default function MoonPhase({ width = 200, height = 200, progress = 0 }) {
           opacity="0.3"
         />
 
-        {/* Luz interna sutil para profundidade */}
         <Ellipse
           cx={centerX - 18}
           cy={centerY - 18}

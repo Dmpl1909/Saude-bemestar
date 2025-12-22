@@ -4,6 +4,7 @@ import Svg, { Defs, LinearGradient as SvgGradient, Stop, Path, Circle, G } from 
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const AnimatedG = Animated.createAnimatedComponent(G);
 
 export default function ExerciseHeart({ width = 200, height = 200, progress = 0 }) {
   const clamped = Math.max(0, Math.min(1, progress));
@@ -14,7 +15,6 @@ export default function ExerciseHeart({ width = 200, height = 200, progress = 0 
   const sparkle2 = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Batimento cardíaco realista
     Animated.loop(
       Animated.sequence([
         Animated.timing(heartbeat, {
@@ -44,7 +44,6 @@ export default function ExerciseHeart({ width = 200, height = 200, progress = 0 
       ])
     ).start();
 
-    // Pulso de energia
     Animated.loop(
       Animated.timing(pulse, {
         toValue: 1,
@@ -54,7 +53,6 @@ export default function ExerciseHeart({ width = 200, height = 200, progress = 0 
       })
     ).start();
 
-    // Brilhos
     Animated.loop(
       Animated.sequence([
         Animated.timing(sparkle1, {
@@ -104,7 +102,6 @@ export default function ExerciseHeart({ width = 200, height = 200, progress = 0 
     outputRange: [0.6, 0.2, 0],
   });
 
-  // Caminho do coração mais bonito e suave
   const heartPath = `
     M ${centerX} ${centerY - 25}
     C ${centerX} ${centerY - 30}, ${centerX - 8} ${centerY - 38}, ${centerX - 20} ${centerY - 38}
@@ -120,7 +117,6 @@ export default function ExerciseHeart({ width = 200, height = 200, progress = 0 
     <View style={{ width, height }}>
       <Svg width={width} height={height}>
         <Defs>
-          {/* Gradiente vermelho vibrante */}
           <SvgGradient id="heartGrad" x1="0" y1="0" x2="0" y2="1">
             <Stop offset="0" stopColor="#FF6B9D" stopOpacity="1" />
             <Stop offset="0.3" stopColor="#FF5582" stopOpacity="1" />
@@ -128,81 +124,70 @@ export default function ExerciseHeart({ width = 200, height = 200, progress = 0 
             <Stop offset="1" stopColor="#D32F2F" stopOpacity="1" />
           </SvgGradient>
 
-          {/* Gradiente para brilho */}
           <SvgGradient id="shineGrad" x1="0" y1="0" x2="1" y2="1">
             <Stop offset="0" stopColor="#FFFFFF" stopOpacity="0.8" />
             <Stop offset="0.5" stopColor="#FFE5E5" stopOpacity="0.4" />
             <Stop offset="1" stopColor="#FF8A80" stopOpacity="0" />
           </SvgGradient>
 
-          {/* Sombra interna */}
           <SvgGradient id="shadowGrad" x1="0" y1="1" x2="0" y2="0">
             <Stop offset="0" stopColor="#B71C1C" stopOpacity="0.5" />
             <Stop offset="0.5" stopColor="#D32F2F" stopOpacity="0" />
           </SvgGradient>
         </Defs>
 
-        {/* Fundo suave */}
         <Circle cx={centerX} cy={centerY} r={90} fill="#FFEBEE" opacity={0.4} />
 
-        {/* Pulso de energia expandindo */}
-        <AnimatedPath
-          d={heartPath}
-          fill="none"
-          stroke="#F44336"
-          strokeWidth="4"
-          opacity={pulseOpacity}
-          style={{
-            transform: [{ scale: pulseScale }],
-          }}
-          origin={`${centerX}, ${centerY}`}
-        />
+        <G>
+          <AnimatedPath
+            d={heartPath}
+            fill="none"
+            stroke="#F44336"
+            strokeWidth="4"
+            opacity={pulseOpacity}
+            scale={pulseScale}
+            originX={centerX}
+            originY={centerY}
+          />
+        </G>
 
-        {/* Coração principal com batimento */}
-        <Animated.View
-          style={{
-            transform: [{ scale: heartbeat }],
-          }}
+        <AnimatedG
+          scale={heartbeat}
+          originX={centerX}
+          originY={centerY}
         >
-          <Svg width={width} height={height}>
-            {/* Sombra do coração */}
+          <Path
+            d={heartPath}
+            fill="#B71C1C"
+            opacity={0.8}
+            translateX={2}
+            translateY={3}
+          />
+
+          <Path d={heartPath} fill="url(#heartGrad)" />
+
+          <Path d={heartPath} fill="url(#shadowGrad)" />
+
+          <Path
+            d={`
+              M ${centerX - 20} ${centerY - 30}
+              Q ${centerX - 15} ${centerY - 35}, ${centerX - 8} ${centerY - 32}
+              Q ${centerX - 12} ${centerY - 28}, ${centerX - 20} ${centerY - 30}
+              Z
+            `}
+            fill="url(#shineGrad)"
+            opacity={0.9}
+          />
+
+          {clamped > 0 && (
             <Path
               d={heartPath}
-              fill="#B71C1C"
-              opacity={0.8}
-              transform={`translate(2, 3)`}
+              fill="#C62828"
+              opacity={clamped * 0.4}
             />
+          )}
+        </AnimatedG>
 
-            {/* Corpo do coração */}
-            <Path d={heartPath} fill="url(#heartGrad)" />
-
-            {/* Sombra interna */}
-            <Path d={heartPath} fill="url(#shadowGrad)" />
-
-            {/* Brilho principal */}
-            <Path
-              d={`
-                M ${centerX - 20} ${centerY - 30}
-                Q ${centerX - 15} ${centerY - 35}, ${centerX - 8} ${centerY - 32}
-                Q ${centerX - 12} ${centerY - 28}, ${centerX - 20} ${centerY - 30}
-                Z
-              `}
-              fill="url(#shineGrad)"
-              opacity={0.9}
-            />
-
-            {/* Preenchimento de progresso */}
-            {clamped > 0 && (
-              <Path
-                d={heartPath}
-                fill="#C62828"
-                opacity={clamped * 0.4}
-              />
-            )}
-          </Svg>
-        </Animated.View>
-
-        {/* Partículas brilhantes ao redor */}
         <AnimatedCircle
           cx={centerX - 50}
           cy={centerY - 20}
@@ -244,10 +229,8 @@ export default function ExerciseHeart({ width = 200, height = 200, progress = 0 
           })}
         />
 
-        {/* Ícones de força quando progresso > 50% */}
         {clamped > 0.5 && (
           <>
-            {/* Símbolo de força esquerda */}
             <Path
               d={`M ${centerX - 75} ${centerY - 40} L ${centerX - 70} ${centerY - 50} L ${centerX - 65} ${centerY - 40} Z`}
               fill="#FF5722"
@@ -259,7 +242,6 @@ export default function ExerciseHeart({ width = 200, height = 200, progress = 0 
               opacity={0.6}
             />
 
-            {/* Símbolo de força direita */}
             <Path
               d={`M ${centerX + 75} ${centerY - 40} L ${centerX + 70} ${centerY - 50} L ${centerX + 65} ${centerY - 40} Z`}
               fill="#FF5722"

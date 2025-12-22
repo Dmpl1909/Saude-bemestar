@@ -13,7 +13,6 @@ export default function WaterGlass({ width = 200, height = 280, progress = 0 }) 
   const iceBob2 = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Smooth continuous wave
     Animated.loop(
       Animated.timing(wave, {
         toValue: 1,
@@ -23,7 +22,6 @@ export default function WaterGlass({ width = 200, height = 280, progress = 0 }) 
       })
     ).start();
 
-    // Ice floating animations
     Animated.loop(
       Animated.sequence([
         Animated.timing(iceBob1, {
@@ -64,13 +62,11 @@ export default function WaterGlass({ width = 200, height = 280, progress = 0 }) 
   const innerH = height - pad * 2;
   const surfaceY = pad + innerH * (1 - clamped);
 
-  // Wave animation
   const wavePhase = wave.interpolate({
     inputRange: [0, 1],
     outputRange: [0, innerW],
   });
 
-  // Ice bob animations
   const iceBobY1 = iceBob1.interpolate({
     inputRange: [0, 1],
     outputRange: [0, -6],
@@ -87,7 +83,6 @@ export default function WaterGlass({ width = 200, height = 280, progress = 0 }) 
     let d = `M ${pad} ${height}`;
     d += ` L ${pad} ${surfaceY}`;
     
-    // Simple smooth wave
     for (let x = 0; x <= innerW; x += 3) {
       const actualX = pad + x;
       const y = surfaceY + Math.sin(((x + phase) * Math.PI * 2) / wavelength) * amplitude;
@@ -107,34 +102,29 @@ export default function WaterGlass({ width = 200, height = 280, progress = 0 }) 
     <View style={{ width, height }}>
       <Svg width={width} height={height}>
         <Defs>
-          {/* Água azul cristalina natural */}
           <SvgGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
             <Stop offset="0" stopColor="#4FC3F7" stopOpacity="0.6" />
             <Stop offset="0.5" stopColor="#29B6F6" stopOpacity="0.75" />
             <Stop offset="1" stopColor="#0288D1" stopOpacity="0.85" />
           </SvgGradient>
           
-          {/* Vidro transparente */}
           <SvgGradient id="glassGrad" x1="0" y1="0" x2="0" y2="1">
             <Stop offset="0" stopColor="#FFFFFF" stopOpacity="0.15" />
             <Stop offset="0.5" stopColor="#E3F2FD" stopOpacity="0.08" />
             <Stop offset="1" stopColor="#BBDEFB" stopOpacity="0.2" />
           </SvgGradient>
           
-          {/* Reflexo de luz */}
           <SvgGradient id="lightReflect" x1="0" y1="0" x2="1" y2="0">
             <Stop offset="0" stopColor="#FFFFFF" stopOpacity="0.4" />
             <Stop offset="0.5" stopColor="#FFFFFF" stopOpacity="0.1" />
             <Stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
           </SvgGradient>
           
-          {/* ClipPath para manter a água dentro do copo */}
           <ClipPath id="glassClip">
             <Rect x={pad} y={pad} width={innerW} height={innerH} rx={15} />
           </ClipPath>
         </Defs>
 
-        {/* Corpo do copo */}
         <Rect
           x={pad}
           y={pad}
@@ -146,7 +136,6 @@ export default function WaterGlass({ width = 200, height = 280, progress = 0 }) 
           strokeWidth="2.5"
         />
 
-        {/* Água com onda suave - dentro do clip */}
         <G clipPath="url(#glassClip)">
           <AnimatedPath
             d={wave.interpolate({
@@ -156,7 +145,6 @@ export default function WaterGlass({ width = 200, height = 280, progress = 0 }) 
             fill="url(#waterGrad)"
           />
 
-          {/* Cubos de gelo simples e bonitos */}
           {showIce && (
             <>
               <AnimatedCircle
@@ -223,7 +211,6 @@ export default function WaterGlass({ width = 200, height = 280, progress = 0 }) 
         )}
         </G>
 
-        {/* Reflexo de luz no vidro */}
         <Rect
           x={pad + 5}
           y={pad + 10}
