@@ -184,7 +184,7 @@ export default function SleepScreen({ navigation }) {
               placeholder="0.0"
             />
             <TouchableOpacity style={styles.updateButton} onPress={updateSleep}>
-              <Text style={styles.updateButtonText}>Actualizar</Text>
+              <Text style={styles.updateButtonText}>Atualizar</Text>
             </TouchableOpacity>
           </View>
         </View>
