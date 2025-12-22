@@ -6,18 +6,41 @@ import {
   FlatList,
   TextInput,
   Alert,
+  Modal,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { getData, saveData, getTodayDate } from '../utils/storage';
 import ExerciseHeart from '../components/ExerciseHeart';
 import styles from '../styles/ExerciseScreenStyles';
- 
+
+const EXERCISES = [
+  'Corrida',
+  'Caminhada',
+  'Ciclismo',
+  'Natação',
+  'Musculação',
+  'Yoga',
+  'Pilates',
+  'Dança',
+  'Futebol',
+  'Basquetebol',
+  'Ténis',
+  'Boxe',
+  'Crossfit',
+  'HIIT',
+  'Alongamentos',
+  'Subir escadas',
+  'Remo',
+  'Spinning',
+];
 
 export default function ExerciseScreen({ navigation }) {
   const [exercises, setExercises] = useState([]);
   const [exerciseName, setExerciseName] = useState('');
   const [duration, setDuration] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -34,6 +57,11 @@ export default function ExerciseScreen({ navigation }) {
     const data = await getData(today);
     data.exercises = newExercises;
     await saveData(today, data);
+  };
+
+  const selectExercise = (exercise) => {
+    setExerciseName(exercise);
+    setShowDropdown(false);
   };
 
   const addExercise = () => {
@@ -126,12 +154,59 @@ export default function ExerciseScreen({ navigation }) {
         <View style={styles.inputCard}>
           <Text style={styles.inputTitle}>Adicionar Exercício</Text>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Nome do exercício (ex: Corrida)"
-            value={exerciseName}
-            onChangeText={setExerciseName}
-          />
+          <TouchableOpacity 
+            style={styles.dropdownButton}
+            onPress={() => setShowDropdown(true)}
+          >
+            <Text style={[styles.dropdownText, !exerciseName && styles.dropdownPlaceholder]}>
+              {exerciseName || 'Seleciona o exercício'}
+            </Text>
+            <Ionicons name="chevron-down" size={20} color="#666" />
+          </TouchableOpacity>
+
+          <Modal
+            visible={showDropdown}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setShowDropdown(false)}
+          >
+            <TouchableOpacity 
+              style={styles.modalOverlay}
+              activeOpacity={1}
+              onPress={() => setShowDropdown(false)}
+            >
+              <View style={styles.dropdownModal}>
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalTitle}>Seleciona o Exercício</Text>
+                  <TouchableOpacity onPress={() => setShowDropdown(false)}>
+                    <Ionicons name="close" size={28} color="#666" />
+                  </TouchableOpacity>
+                </View>
+                <ScrollView style={styles.dropdownList}>
+                  {EXERCISES.map((exercise, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={[
+                        styles.dropdownItem,
+                        exerciseName === exercise && styles.dropdownItemSelected
+                      ]}
+                      onPress={() => selectExercise(exercise)}
+                    >
+                      <Text style={[
+                        styles.dropdownItemText,
+                        exerciseName === exercise && styles.dropdownItemTextSelected
+                      ]}>
+                        {exercise}
+                      </Text>
+                      {exerciseName === exercise && (
+                        <Ionicons name="checkmark" size={24} color="#F44336" />
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            </TouchableOpacity>
+          </Modal>
 
           <TextInput
             style={styles.input}
@@ -152,7 +227,7 @@ export default function ExerciseScreen({ navigation }) {
           {exercises.length === 0 ? (
             <View style={styles.emptyContainer}>
               <Ionicons name="barbell-outline" size={60} color="#CCC" />
-              <Text style={styles.emptyText}>Nenhum exercício registado ainda</Text>
+              <Text style={styles.emptyText}>Nenhum exercício registado</Text>
             </View>
           ) : (
             <FlatList
