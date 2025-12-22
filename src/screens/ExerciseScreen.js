@@ -82,7 +82,7 @@ export default function ExerciseScreen({ navigation }) {
       setGoal(newGoal);
       saveExercises(exercises, newGoal);
       setShowGoalInput(false);
-      Alert.alert('Sucesso', `Meta actualizada para ${newGoal} minutos!`);
+      Alert.alert('Sucesso', `Meta atualizada para ${newGoal} minutos!`);
     } else {
       Alert.alert('Erro', 'Introduza um número válido entre 1 e 300');
     }
