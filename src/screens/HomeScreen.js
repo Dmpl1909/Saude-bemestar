@@ -13,6 +13,9 @@ import styles from '../styles/HomeScreenStyles';
 export default function HomeScreen({ navigation }) {
   const [data, setData] = useState({ water: 0, sleep: 0, exercises: [] });
   const [currentDate, setCurrentDate] = useState('');
+  const [waterGoal, setWaterGoal] = useState(8);
+  const [sleepGoal, setSleepGoal] = useState(8);
+  const [exerciseGoal, setExerciseGoal] = useState(30);
 
   useEffect(() => {
     loadData();
@@ -23,12 +26,19 @@ export default function HomeScreen({ navigation }) {
     setCurrentDate(formatDate(today));
     const savedData = await getData(today);
     setData(savedData);
+    setWaterGoal(savedData.waterGoal || 8);
+    setSleepGoal(savedData.sleepGoal || 8);
+    setExerciseGoal(savedData.exerciseGoal || 30);
   };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString('pt-PT', options);
+  };
+
+  const getTotalExerciseMinutes = () => {
+    return data.exercises.reduce((total, ex) => total + ex.duration, 0);
   };
 
   useEffect(() => {
@@ -66,9 +76,9 @@ export default function HomeScreen({ navigation }) {
             </View>
             <View style={styles.statInfo}>
               <Text style={styles.statLabel}>Água</Text>
-              <Text style={styles.statValue}>{data.water} / 8 copos</Text>
+              <Text style={styles.statValue}>{data.water} / {waterGoal} copos</Text>
               <View style={styles.progressBar}>
-                <View style={[styles.progressFill, { width: `${(data.water / 8) * 100}%`, backgroundColor: '#2196F3' }]} />
+                <View style={[styles.progressFill, { width: `${Math.min((data.water / waterGoal) * 100, 100)}%`, backgroundColor: '#2196F3' }]} />
               </View>
             </View>
           </TouchableOpacity>
@@ -82,9 +92,9 @@ export default function HomeScreen({ navigation }) {
             </View>
             <View style={styles.statInfo}>
               <Text style={styles.statLabel}>Sono</Text>
-              <Text style={styles.statValue}>{data.sleep} / 8 horas</Text>
+              <Text style={styles.statValue}>{data.sleep} / {sleepGoal} horas</Text>
               <View style={styles.progressBar}>
-                <View style={[styles.progressFill, { width: `${(data.sleep / 8) * 100}%`, backgroundColor: '#9C27B0' }]} />
+                <View style={[styles.progressFill, { width: `${Math.min((data.sleep / sleepGoal) * 100, 100)}%`, backgroundColor: '#9C27B0' }]} />
               </View>
             </View>
           </TouchableOpacity>
@@ -98,9 +108,9 @@ export default function HomeScreen({ navigation }) {
             </View>
             <View style={styles.statInfo}>
               <Text style={styles.statLabel}>Exercícios</Text>
-              <Text style={styles.statValue}>{data.exercises.length} atividades</Text>
+              <Text style={styles.statValue}>{getTotalExerciseMinutes()} / {exerciseGoal} minutos</Text>
               <View style={styles.progressBar}>
-                <View style={[styles.progressFill, { width: `${Math.min((data.exercises.length / 3) * 100, 100)}%`, backgroundColor: '#F44336' }]} />
+                <View style={[styles.progressFill, { width: `${Math.min((getTotalExerciseMinutes() / exerciseGoal) * 100, 100)}%`, backgroundColor: '#F44336' }]} />
               </View>
             </View>
           </TouchableOpacity>
