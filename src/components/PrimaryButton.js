@@ -1,8 +1,9 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle, View } from 'react-native';
+import { TouchableOpacity, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { radius, spacing, fonts, gradients, shadow } from '../theme';
+import { gradients, shadow } from '../theme';
+import styles from '../styles/PrimaryButtonStyles';
 
 export default function PrimaryButton({ title, onPress, icon, gradientColors = gradients.royal, style, textStyle }) {
   return (
@@ -14,20 +15,3 @@ export default function PrimaryButton({ title, onPress, icon, gradientColors = g
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    borderRadius: radius.md,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.xl,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  text: {
-    color: '#fff',
-    fontSize: 16,
-    fontFamily: fonts.semibold,
-    letterSpacing: 0.3,
-  },
-});

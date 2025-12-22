@@ -7,7 +7,7 @@ export const saveData = async (date, data) => {
     const key = `${STORAGE_KEY}_${date}`;
     await AsyncStorage.setItem(key, JSON.stringify(data));
   } catch (error) {
-    console.error('Erro ao salvar dados:', error);
+    console.error('Erro ao guardar dados:', error);
   }
 };
 

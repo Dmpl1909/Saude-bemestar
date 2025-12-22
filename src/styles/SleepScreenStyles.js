@@ -1,0 +1,190 @@
+import { StyleSheet } from 'react-native';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F5F6FA',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 20,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  content: {
+    alignItems: 'center',
+    padding: 20,
+    paddingBottom: 40,
+  },
+  iconContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  countText: {
+    fontSize: 72,
+    fontWeight: 'bold',
+    color: '#9C27B0',
+  },
+  labelText: {
+    fontSize: 20,
+    color: '#666',
+    marginBottom: 15,
+  },
+  qualityBadge: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginBottom: 20,
+  },
+  qualityText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  progressContainer: {
+    width: '100%',
+    marginBottom: 20,
+  },
+  progressBar: {
+    height: 20,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginBottom: 10,
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: '#9B59B6',
+  },
+  progressText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#9C27B0',
+    fontWeight: '600',
+  },
+  goalInputContainer: {
+    backgroundColor: '#FFFFFF',
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  goalInputLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 10,
+    fontWeight: '600',
+  },
+  goalInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  goalInput: {
+    flex: 1,
+    height: 45,
+    borderWidth: 2,
+    borderColor: '#9C27B0',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    backgroundColor: '#F9F5FF',
+  },
+  goalUpdateButton: {
+    backgroundColor: '#9C27B0',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  goalUpdateButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  goalCancelButton: {
+    padding: 10,
+  },
+  inputContainer: {
+    width: '100%',
+    marginBottom: 20,
+  },
+  inputLabel: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 10,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  input: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    fontSize: 18,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  updateButton: {
+    backgroundColor: '#9B59B6',
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+  },
+  updateButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 30,
+    marginBottom: 20,
+  },
+  button: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+  },
+  addButton: {
+    backgroundColor: '#9B59B6',
+  },
+  removeButton: {
+    backgroundColor: '#E74C3C',
+  },
+  tipText: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    paddingHorizontal: 20,
+    lineHeight: 20,
+  },
+});
+
+export default styles;
