@@ -51,16 +51,16 @@ export default function SleepScreen({ navigation }) {
       setGoal(newGoal);
       saveSleepData(sleepHours, newGoal);
       setShowGoalInput(false);
-      Alert.alert('Sucesso', `Meta atualizada para ${newGoal} horas!`);
+      Alert.alert('Sucesso', `Meta actualizada para ${newGoal} horas!`);
     } else {
-      Alert.alert('Erro', 'Digite um número válido entre 1 e 16');
+      Alert.alert('Erro', 'Introduza um número válido entre 1 e 16');
     }
   };
 
   const updateSleep = () => {
     const hours = parseFloat(inputValue);
     if (isNaN(hours) || hours < 0 || hours > 24) {
-      Alert.alert('Valor Inválido', 'Por favor, insira um valor entre 0 e 24 horas.');
+      Alert.alert('Valor Inválido', 'Por favor, introduz um valor entre 0 e 24 horas.');
       return;
     }
 
@@ -68,7 +68,7 @@ export default function SleepScreen({ navigation }) {
     saveSleepData(hours);
 
     if (hours >= goal) {
-      Alert.alert('Ótimo!', 'Você dormiu o suficiente! 😴');
+      Alert.alert('Ótimo!', 'Dormiste o suficiente! 😴');
     }
   };
 
@@ -88,12 +88,12 @@ export default function SleepScreen({ navigation }) {
 
   const resetSleep = () => {
     Alert.alert(
-      'Resetar Horas',
-      'Deseja resetar as horas de sono para hoje?',
+      'Reiniciar Horas',
+      'Desejas reiniciar as horas de sono para hoje?',
       [
         { text: 'Cancelar', style: 'cancel' },
         {
-          text: 'Resetar',
+          text: 'Reiniciar',
           style: 'destructive',
           onPress: () => {
             setSleepHours(0);
@@ -108,7 +108,7 @@ export default function SleepScreen({ navigation }) {
   const getSleepQuality = () => {
     if (sleepHours >= 8) return { text: 'Excelente', color: '#27AE60' };
     if (sleepHours >= 7) return { text: 'Bom', color: '#F39C12' };
-    if (sleepHours >= 6) return { text: 'Regular', color: '#E67E22' };
+    if (sleepHours >= 6) return { text: 'Razoável', color: '#E67E22' };
     return { text: 'Insuficiente', color: '#E74C3C' };
   };
 
@@ -161,7 +161,7 @@ export default function SleepScreen({ navigation }) {
                 placeholder="8"
               />
               <TouchableOpacity style={styles.goalUpdateButton} onPress={updateGoal}>
-                <Text style={styles.goalUpdateButtonText}>Salvar</Text>
+                <Text style={styles.goalUpdateButtonText}>Guardar</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 style={styles.goalCancelButton} 
@@ -174,7 +174,7 @@ export default function SleepScreen({ navigation }) {
         )}
 
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Digite as horas:</Text>
+          <Text style={styles.inputLabel}>Introduz as horas:</Text>
           <View style={styles.inputRow}>
             <TextInput
               style={styles.input}
@@ -184,7 +184,7 @@ export default function SleepScreen({ navigation }) {
               placeholder="0.0"
             />
             <TouchableOpacity style={styles.updateButton} onPress={updateSleep}>
-              <Text style={styles.updateButtonText}>Atualizar</Text>
+              <Text style={styles.updateButtonText}>Actualizar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -203,7 +203,7 @@ export default function SleepScreen({ navigation }) {
         </View>
 
         <Text style={styles.tipText}>
-          💡 Dica: Durma de 7 a 9 horas por noite para uma boa recuperação!
+          💡 Dica: Dorme de 7 a 9 horas por noite para te manteres saudável!
         </Text>
         </ScrollView>
       </TouchableWithoutFeedback>

@@ -38,13 +38,13 @@ export default function ExerciseScreen({ navigation }) {
 
   const addExercise = () => {
     if (!exerciseName.trim()) {
-      Alert.alert('Atenção', 'Por favor, digite o nome do exercício.');
+      Alert.alert('Atenção', 'Por favor, introduz o nome do exercício.');
       return;
     }
 
     const minutes = parseInt(duration);
     if (isNaN(minutes) || minutes <= 0) {
-      Alert.alert('Atenção', 'Por favor, digite uma duração válida em minutos.');
+      Alert.alert('Atenção', 'Por favor, introduz uma duração válida em minutos.');
       return;
     }
 
@@ -52,7 +52,7 @@ export default function ExerciseScreen({ navigation }) {
       id: Date.now().toString(),
       name: exerciseName,
       duration: minutes,
-      time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+      time: new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }),
     };
 
     const newExercises = [...exercises, newExercise];
@@ -65,7 +65,7 @@ export default function ExerciseScreen({ navigation }) {
   };
 
   const removeExercise = (id) => {
-    Alert.alert('Remover Exercício', 'Deseja remover este exercício?', [
+    Alert.alert('Remover Exercício', 'Desejas remover este exercício?', [
       { text: 'Cancelar', style: 'cancel' },
       {
         text: 'Remover',
@@ -152,7 +152,7 @@ export default function ExerciseScreen({ navigation }) {
           {exercises.length === 0 ? (
             <View style={styles.emptyContainer}>
               <Ionicons name="barbell-outline" size={60} color="#CCC" />
-              <Text style={styles.emptyText}>Nenhum exercício registrado ainda</Text>
+              <Text style={styles.emptyText}>Nenhum exercício registado ainda</Text>
             </View>
           ) : (
             <FlatList

@@ -28,7 +28,7 @@ export default function HomeScreen({ navigation }) {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('pt-BR', options);
+    return date.toLocaleDateString('pt-PT', options);
   };
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.header}>
           <View>
             <Text style={styles.greeting}>Olá! 👋</Text>
-            <Text style={styles.subtitle}>Como está sua saúde hoje?</Text>
+            <Text style={styles.subtitle}>Como está a tua saúde hoje?</Text>
           </View>
           <View style={styles.iconContainer}>
             <Ionicons name="fitness" size={40} color="#2196F3" />

@@ -50,9 +50,9 @@ export default function WaterScreen({ navigation }) {
       setGoal(newGoal);
       saveWaterData(waterCount, newGoal);
       setShowGoalInput(false);
-      Alert.alert('Sucesso', `Meta atualizada para ${newGoal} copos!`);
+      Alert.alert('Sucesso', `Meta actualizada para ${newGoal} copos!`);
     } else {
-      Alert.alert('Erro', 'Digite um número válido entre 1 e 20');
+      Alert.alert('Erro', 'Introduza um número válido entre 1 e 20');
     }
   };
 
@@ -62,7 +62,7 @@ export default function WaterScreen({ navigation }) {
     saveWaterData(newCount);
     
     if (newCount === goal) {
-      Alert.alert('Parabéns!', 'Você atingiu sua meta diária de água! 🎉');
+      Alert.alert('Parabéns!', 'Atingiste a tua meta diária de água! 🎉');
     }
   };
 
@@ -76,12 +76,12 @@ export default function WaterScreen({ navigation }) {
 
   const resetWater = () => {
     Alert.alert(
-      'Resetar Contador',
-      'Deseja resetar o contador de água para hoje?',
+      'Reiniciar Contador',
+      'Desejas reiniciar o contador de água para hoje?',
       [
         { text: 'Cancelar', style: 'cancel' },
         {
-          text: 'Resetar',
+          text: 'Reiniciar',
           style: 'destructive',
           onPress: () => {
             setWaterCount(0);
@@ -162,7 +162,7 @@ export default function WaterScreen({ navigation }) {
         </View>
 
         <Text style={styles.tipText}>
-          Dica: Beba pelo menos 8 copos de água por dia para manter-se hidratado!
+          Dica: Bebe pelo menos 8 copos de água por dia para te manteres hidratado!
         </Text>
         </ScrollView>
       </TouchableWithoutFeedback>
