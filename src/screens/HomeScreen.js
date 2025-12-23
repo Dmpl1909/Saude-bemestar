@@ -42,7 +42,7 @@ export default function HomeScreen({ navigation }) {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>Olá! 👋</Text>
+            <Text style={styles.greeting}>Olá! </Text>
             <Text style={styles.subtitle}>Como está sua saúde hoje?</Text>
           </View>
           <View style={styles.iconContainer}>

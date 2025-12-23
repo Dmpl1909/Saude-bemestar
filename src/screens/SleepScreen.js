@@ -144,7 +144,7 @@ export default function SleepScreen({ navigation }) {
           </View>
           <TouchableOpacity onPress={() => setShowGoalInput(!showGoalInput)}>
             <Text style={styles.progressText}>
-              Meta: {sleepHours.toFixed(1)}/{goal} horas 📝
+              Meta: {sleepHours.toFixed(1)}/{goal} horas
             </Text>
           </TouchableOpacity>
         </View>

@@ -61,7 +61,7 @@ export default function ExerciseScreen({ navigation }) {
 
     setExerciseName('');
     setDuration('');
-    Alert.alert('Sucesso!', 'Exercício adicionado com sucesso! 💪');
+    Alert.alert('Sucesso!', 'Exercício adicionado com sucesso!');
   };
 
   const removeExercise = (id) => {
