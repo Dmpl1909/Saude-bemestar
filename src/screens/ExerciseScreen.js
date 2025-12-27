@@ -272,7 +272,7 @@ export default function ExerciseScreen({ navigation }) {
                   placeholder="30"
                 />
                 <TouchableOpacity style={styles.goalUpdateButton} onPress={updateGoal}>
-                  <Text style={styles.goalUpdateButtonText}>Salvar</Text>
+                  <Text style={styles.goalUpdateButtonText}>Guardar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
                   style={styles.goalCancelButton} 

@@ -50,7 +50,7 @@ export default function WaterScreen({ navigation }) {
       setGoal(newGoal);
       saveWaterData(waterCount, newGoal);
       setShowGoalInput(false);
-      Alert.alert('Sucesso', `Meta actualizada para ${newGoal} copos!`);
+      Alert.alert('Sucesso', `Meta atualizada para ${newGoal} copos!`);
     } else {
       Alert.alert('Erro', 'Introduza um número válido entre 1 e 20');
     }
@@ -136,7 +136,7 @@ export default function WaterScreen({ navigation }) {
                 placeholder="8"
               />
               <TouchableOpacity style={styles.goalUpdateButton} onPress={updateGoal}>
-                <Text style={styles.goalUpdateButtonText}>Salvar</Text>
+                <Text style={styles.goalUpdateButtonText}>Guardar</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 style={styles.goalCancelButton} 
