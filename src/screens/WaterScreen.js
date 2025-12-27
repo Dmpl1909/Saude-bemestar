@@ -133,7 +133,8 @@ export default function WaterScreen({ navigation }) {
                 value={goalInputValue}
                 onChangeText={setGoalInputValue}
                 keyboardType="number-pad"
-                placeholder="8"
+                autoFocus={true}
+                selectTextOnFocus={true}
               />
               <TouchableOpacity style={styles.goalUpdateButton} onPress={updateGoal}>
                 <Text style={styles.goalUpdateButtonText}>Guardar</Text>

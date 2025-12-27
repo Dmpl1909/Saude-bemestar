@@ -144,7 +144,7 @@ export default function SleepScreen({ navigation }) {
           </View>
           <TouchableOpacity onPress={() => setShowGoalInput(!showGoalInput)}>
             <Text style={styles.progressText}>
-              Meta: {sleepHours.toFixed(1)}/{goal} horas 📝
+              Meta: {sleepHours.toFixed(1)}/{goal} horas
             </Text>
           </TouchableOpacity>
         </View>
@@ -158,7 +158,8 @@ export default function SleepScreen({ navigation }) {
                 value={goalInputValue}
                 onChangeText={setGoalInputValue}
                 keyboardType="number-pad"
-                placeholder="8"
+                autoFocus={true}
+                selectTextOnFocus={true}
               />
               <TouchableOpacity style={styles.goalUpdateButton} onPress={updateGoal}>
                 <Text style={styles.goalUpdateButtonText}>Guardar</Text>

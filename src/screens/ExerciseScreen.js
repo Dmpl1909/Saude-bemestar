@@ -255,7 +255,7 @@ export default function ExerciseScreen({ navigation }) {
             </View>
             <TouchableOpacity onPress={() => setShowGoalInput(!showGoalInput)}>
               <Text style={styles.progressText}>
-                Meta: {getTotalDuration()}/{goal} minutos 📝
+                Meta: {getTotalDuration()}/{goal} minutos
               </Text>
             </TouchableOpacity>
           </View>
@@ -269,7 +269,6 @@ export default function ExerciseScreen({ navigation }) {
                   value={goalInputValue}
                   onChangeText={setGoalInputValue}
                   keyboardType="number-pad"
-                  placeholder="30"
                 />
                 <TouchableOpacity style={styles.goalUpdateButton} onPress={updateGoal}>
                   <Text style={styles.goalUpdateButtonText}>Guardar</Text>
