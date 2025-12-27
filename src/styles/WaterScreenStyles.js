@@ -85,14 +85,14 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   goalInput: {
-    flex: 1,
-    height: 45,
+    flex: 1,    minWidth: 80,    height: 45,
     borderWidth: 2,
     borderColor: '#2196F3',
     borderRadius: 8,
     paddingHorizontal: 15,
     fontSize: 16,
     backgroundColor: '#F5F9FF',
+    color: '#333',
   },
   goalUpdateButton: {
     backgroundColor: '#2196F3',
